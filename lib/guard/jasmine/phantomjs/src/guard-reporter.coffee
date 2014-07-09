@@ -84,13 +84,16 @@ class GuardReporter
     results: ->
         spec_count    = 0
         failure_count = 0
+        pending_count = 0
         for suite in this.eachSuite(@stack[0])
             spec_count += suite.specs.length
             for spec in suite.specs
-                failure_count += 1 unless spec.passed
+                failure_count += 1 unless spec.passed || spec.pending
+                pending_count += 1 if spec.pending
         {
             stats: {
                 specs: spec_count,
+                pending: pending_count,
                 failures: failure_count,
                 time: ( Date.now() - @startedAt ) / 1000
             },
